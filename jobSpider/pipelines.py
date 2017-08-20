@@ -9,7 +9,7 @@ import json
 class JobspiderPipeline(object):
     def __init__(self):
         # 将爬取到的数据存入python.json文件中
-        self.file = open('python.json','wb')
+        self.file = open('java.json','wb')
 
     def process_item(self, item, spider):
         line = str(item)

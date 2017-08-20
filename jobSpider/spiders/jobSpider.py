@@ -7,7 +7,7 @@ class JobSpider(scrapy.spiders.Spider):
     allowed_domains = ["liepin.com"]
     start_urls = [
         # 定义初始链接为猎聘网中以Python为关键词的搜索结果页面
-        "https://www.liepin.com/zhaopin/?key=python",
+        "https://www.liepin.com/zhaopin/?key=java",
     ]
 
     def parse(self, response):
@@ -26,12 +26,8 @@ class JobSpider(scrapy.spiders.Spider):
         # 判断有无下一页内容
         # 获取底部页码链接元素
         pageLink = response.xpath('//div[@class="pagerbar"]/a/@href').extract()
-        if len(pageLink) == 9 :
-            nextPage = pageLink[7]
-        elif len(pageLink) == 8 :
-            nextPage = pageLink[6]
-        elif len(pageLink) == 7:
-            nextPage = pageLink[5]
+        if len(pageLink) >= 7:
+            nextPage = pageLink[len(pageLink)-2]
         if len(nextPage) > 15:
             yield Request(url=nextPage,callback=self.parse)
         else:
