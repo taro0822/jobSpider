@@ -5,15 +5,17 @@ from jobSpider.items import JobspiderItem
 class JobSpider(scrapy.spiders.Spider):
     name = 'jobSpider'
     allowed_domains = ["liepin.com"]
+    keyword = 'python'
     start_urls = [
         # 定义初始链接为猎聘网中以Python为关键词的搜索结果页面
-        "https://www.liepin.com/zhaopin/?key=java",
+        "https://www.liepin.com/zhaopin/?key= %s" % keyword,
     ]
 
     def parse(self, response):
         for sel in response.xpath('//ul[@class="sojob-list"]/li//div[@class="sojob-item-main clearfix"]'):
             # 提取列表界面中的招聘关键信息
             item = JobspiderItem()
+            item['keyword'] = self.keyword
             item['title'] = str(sel.xpath('div/h3/a/text()').extract())[32:][:-3]
             item['salary'] = str(sel.xpath('div/p/span[@class="text-warning"]/text()').extract())[2:][:-2]
             item['link'] = str(sel.xpath('div/h3/a/@href').extract())[2:][:-2]
@@ -32,3 +34,6 @@ class JobSpider(scrapy.spiders.Spider):
             yield Request(url=nextPage,callback=self.parse)
         else:
             print('No next page! Job is done!')
+
+    def prase_detail(self,response):
+        pass

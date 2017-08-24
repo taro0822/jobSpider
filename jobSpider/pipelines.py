@@ -16,7 +16,8 @@ class JobspiderPipeline(object):
     def process_item(self, item, spider):
         # line = str(item)
         # self.file.write(line.encode('utf-8') + "\n".encode('utf-8'))
+        keyword = item['keyword']
         db = MongoClient('localhost',27017)['pySpider']
-        id = db['python'].insert_one(dict(item)).inserted_id
+        id = db[keyword].insert_one(dict(item)).inserted_id
         print('insert: ', id)
         return item
